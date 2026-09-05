@@ -77,8 +77,8 @@
       <section class="demo-section" aria-labelledby="demo-title">
         <div class="section-heading">
           <div>
-            <p class="section-label">MVP DEMO</p>
-            <h2 id="demo-title">핵심 기능 시연 영역</h2>
+            <p class="section-label">CHOICE QUIZ</p>
+            <h2 id="demo-title">오늘의 선택 알아보기</h2>
           </div>
 
           <span id="app-status" class="status-badge">
@@ -87,23 +87,10 @@
         </div>
 
         <div class="demo-panel">
-          <p>
-            아래 버튼은 실행 환경을 확인하기 위한 예시입니다.
-            프로젝트를 시작하면 이 영역을 팀의 핵심 기능으로
-            교체하세요.
-          </p>
-
-          <div class="action-area">
+          <div id="quiz-intro" class="quiz-intro">
+            <h3>나의 선택 경향 알아보기</h3>
             <button id="start-button" type="button">
-              실행 확인
-            </button>
-
-            <button
-              id="reset-button"
-              class="secondary-button"
-              type="button"
-            >
-              초기화
+              질문 시작
             </button>
           </div>
 
@@ -112,8 +99,8 @@
             class="result-box"
             role="status"
             aria-live="polite"
+            hidden
           >
-            버튼을 누르면 결과가 이곳에 표시됩니다.
           </div>
         </div>
       </section>

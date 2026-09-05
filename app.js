@@ -14,32 +14,123 @@
  */
 
 const startButton = document.querySelector("#start-button");
-const resetButton = document.querySelector("#reset-button");
+const quizIntro = document.querySelector("#quiz-intro");
 const resultBox = document.querySelector("#result");
 const appStatus = document.querySelector("#app-status");
 
-function showRunningMessage() {
-  resultBox.textContent =
-    "✅ 앱이 정상적으로 실행되고 있습니다. 이제 이 예시 기능을 우리 팀의 핵심 기능으로 교체하세요.";
+const questions = [
+  {
+    question: "오늘 하루를 시작할 때 더 필요한 것은 무엇인가요?",
+    choices: [
+      { label: "차분하게 계획 세우기", image: "assets/choice-calm.svg" },
+      {
+        label: "새로운 일에 바로 도전하기",
+        image: "assets/choice-adventure.svg",
+      },
+    ],
+  },
+  {
+    question: "어려운 일이 생겼을 때 나는 어떻게 해결하나요?",
+    choices: [
+      { label: "혼자 먼저 생각해 보기", image: "assets/choice-solo.svg" },
+      {
+        label: "주변 사람과 함께 이야기하기",
+        image: "assets/choice-together.svg",
+      },
+    ],
+  },
+  {
+    question: "쉬는 시간에는 어떤 활동이 더 끌리나요?",
+    choices: [
+      { label: "조용히 휴식하기", image: "assets/choice-calm.svg" },
+      { label: "재미있는 활동 즐기기", image: "assets/choice-adventure.svg" },
+    ],
+  },
+  {
+    question: "새로운 선택을 할 때 가장 중요하게 보는 것은 무엇인가요?",
+    choices: [
+      { label: "안정성과 익숙함", image: "assets/choice-calm.svg" },
+      { label: "가능성과 설렘", image: "assets/choice-adventure.svg" },
+    ],
+  },
+];
+
+let currentQuestionIndex = 0;
+let selectedChoices = [];
+
+function renderQuestion() {
+  const currentQuestion = questions[currentQuestionIndex];
+  const questionNumber = currentQuestionIndex + 1;
+
+  resultBox.innerHTML = `
+    <p class="question-count">${questionNumber} / ${questions.length}</p>
+    <p class="question-text">${currentQuestion.question}</p>
+    <div class="choice-list" role="group" aria-label="선택지">
+      ${currentQuestion.choices
+        .map(
+          (choice, choiceIndex) => `
+            <button class="choice-button" type="button" data-choice-index="${choiceIndex}">
+              <span class="choice-label">${choice.label}</span>
+              <img class="choice-image" src="${choice.image}" alt="${choice.label} 이미지" />
+            </button>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
 
   resultBox.classList.add("is-success");
-
-  appStatus.textContent = "실행 확인 완료";
+  appStatus.textContent = `${questionNumber}번째 질문`;
   appStatus.classList.add("is-running");
+
+  resultBox.querySelectorAll(".choice-button").forEach((choiceButton) => {
+    choiceButton.addEventListener("click", handleChoiceSelection);
+  });
 }
 
-function resetDemo() {
-  resultBox.textContent =
-    "버튼을 누르면 결과가 이곳에 표시됩니다.";
+function handleChoiceSelection(event) {
+  const choiceIndex = Number(event.currentTarget.dataset.choiceIndex);
+  selectedChoices.push(choiceIndex);
+  currentQuestionIndex += 1;
 
-  resultBox.classList.remove("is-success");
+  if (currentQuestionIndex < questions.length) {
+    renderQuestion();
+    return;
+  }
 
-  appStatus.textContent = "시작 준비";
-  appStatus.classList.remove("is-running");
+  showResult();
 }
 
-startButton.addEventListener("click", showRunningMessage);
-resetButton.addEventListener("click", resetDemo);
+function showResult() {
+  const firstChoiceCount = selectedChoices.filter(
+    (choiceIndex) => choiceIndex === 0,
+  ).length;
+  const resultMessage =
+    firstChoiceCount >= 3
+      ? "신중하고 차분하게 생각하는 편이에요."
+      : firstChoiceCount <= 1
+        ? "새로운 경험과 가능성을 즐기는 편이에요."
+        : "상황에 따라 균형 있게 선택하는 편이에요.";
+
+  resultBox.innerHTML = `
+    <p class="question-text">선택이 모두 완료되었습니다.</p>
+    <strong>${resultMessage}</strong>
+    <p>정답은 없으며, 지금의 선택을 가볍게 돌아보는 결과입니다.</p>
+    <img class="result-image" src="assets/result.svg" alt="선택 결과를 보여주는 이미지" />
+  `;
+
+  appStatus.textContent = "선택 완료";
+}
+
+function startQuiz() {
+  currentQuestionIndex = 0;
+  selectedChoices = [];
+  quizIntro.hidden = true;
+  resultBox.hidden = false;
+  renderQuestion();
+}
+
+startButton.addEventListener("click", startQuiz);
 
 /*
  * TODO: 아래 순서로 팀 프로젝트를 구현하세요.
