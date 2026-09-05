@@ -16,34 +16,33 @@
 const startButton = document.querySelector("#start-button");
 const quizIntro = document.querySelector("#quiz-intro");
 const resultBox = document.querySelector("#result");
-const appStatus = document.querySelector("#app-status");
 
 const questions = [
   {
     question: "어떤 엔진을 사용하고 싶으신가요?",
     choices: [
-      { label: "약 1000마력의 F1자동차급 매연엔진", image: "assets/choice-calm.svg" },
+      { label: "약 1000마력의 F1자동차급 매연엔진", image: "assets/e2.jpg" },
       {
         label: "약76마력의 모닝급 전기 엔진",
-        image: "assets/choice-adventure.svg",
+        image: "assets/e1.png",
       },
     ],
   },
   {
     question: "어떤 타이어를 선택하실건가요?",
     choices: [
-      { label: "일반 도로를 달리는 평범한 타이어", image: "assets/choice-solo.svg" },
+      { label: "위험한 정글이든 사막이든 어디든지 갈 수 있는 오프로드 타이어", image: "assets/t2.png" },
       {
-        label: "위험한 정글이든 사막이든 어디든지 갈 수 있는 오프로드 타이어",
-        image: "assets/choice-together.svg",
+        label: "일반 도로를 달리는 평범한 타이어",
+        image: "assets/t1.png",
       },
     ],
   },
   {
     question: "어떤 도색을 하실건가요?",
     choices: [
-      { label: "환경오염이 되지만 역시 자동차는 강렬한 레드", image: "assets/choice-calm.svg" },
-      { label: "친환경적이지만 못생긴 블루", image: "assets/choice-adventure.svg" },
+      { label: "환경오염이 되지만 역시 자동차는 강렬한 레드", image: "assets/c2.png" },
+      { label: "친환경적이지만 못생긴 블루", image: "assets/c1.png" },
     ],
   },
 ];
@@ -77,11 +76,8 @@ function renderQuestion() {
     </div>
   `;
 
+  resultBox.classList.remove("result-eco", "result-polluted");
   resultBox.classList.add("is-success");
-  if (appStatus) {
-    appStatus.textContent = `${questionNumber}번째 질문`;
-    appStatus.classList.add("is-running");
-  }
 
   resultBox.querySelectorAll(".choice-button").forEach((choiceButton) => {
     choiceButton.addEventListener("click", handleChoiceSelection);
@@ -108,16 +104,19 @@ function showResult() {
   ).length;
   const resultMessage =
     ecoFriendlyChoiceCount >= 2 ? "친환경적인 미래" : "오염된 미래";
+  const resultImage =
+    ecoFriendlyChoiceCount >= 2 ? "assets/f1.png" : "assets/f2.png";
+  const resultClass =
+    ecoFriendlyChoiceCount >= 2 ? "result-eco" : "result-polluted";
 
   resultBox.innerHTML = `
     <p class="question-text">선택이 모두 완료되었습니다.</p>
     <strong class="future-result">${resultMessage}</strong>
-    <img class="result-image" src="assets/result.svg" alt="선택 결과를 보여주는 이미지" />
+    <img class="result-image" src="${resultImage}" alt="${resultMessage} 이미지" />
   `;
+  resultBox.classList.remove("is-success");
+  resultBox.classList.add(resultClass);
 
-  if (appStatus) {
-    appStatus.textContent = "선택 완료";
-  }
 }
 
 function startQuiz() {

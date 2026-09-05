@@ -290,6 +290,18 @@ button:focus-visible {
   color: #065f46;
 }
 
+.result-box.result-eco {
+  border-color: #93c5fd;
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.result-box.result-polluted {
+  border-color: #fdba74;
+  background: #ffedd5;
+  color: #9a3412;
+}
+
 .question-count {
   margin: 0 0 12px;
   color: #047857;
@@ -325,10 +337,10 @@ button:focus-visible {
   align-items: center;
   justify-content: flex-start;
   padding: 28px;
-  border: 2px solid #a7f3d0;
+  border: 2px solid #d1d5db;
   border-radius: 16px;
-  background: white;
-  color: #065f46;
+  background: #f3f4f6;
+  color: #374151;
   font-size: 1.1rem;
   line-height: 1.5;
   text-align: center;
@@ -348,9 +360,9 @@ button:focus-visible {
 }
 
 .choice-button:hover {
-  border-color: #34d399;
-  background: #f0fdf4;
-  color: #064e3b;
+  border-color: #9ca3af;
+  background: #e5e7eb;
+  color: #1f2937;
 }
 
 .result-image {
