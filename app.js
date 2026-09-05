@@ -20,43 +20,41 @@ const appStatus = document.querySelector("#app-status");
 
 const questions = [
   {
-    question: "오늘 하루를 시작할 때 더 필요한 것은 무엇인가요?",
+    question: "어떤 엔진을 사용하고 싶으신가요?",
     choices: [
-      { label: "차분하게 계획 세우기", image: "assets/choice-calm.svg" },
+      { label: "약 1000마력의 F1자동차급 매연엔진", image: "assets/choice-calm.svg" },
       {
-        label: "새로운 일에 바로 도전하기",
+        label: "약76마력의 모닝급 전기 엔진",
         image: "assets/choice-adventure.svg",
       },
     ],
   },
   {
-    question: "어려운 일이 생겼을 때 나는 어떻게 해결하나요?",
+    question: "어떤 타이어를 선택하실건가요?",
     choices: [
-      { label: "혼자 먼저 생각해 보기", image: "assets/choice-solo.svg" },
+      { label: "일반 도로를 달리는 평범한 타이어", image: "assets/choice-solo.svg" },
       {
-        label: "주변 사람과 함께 이야기하기",
+        label: "위험한 정글이든 사막이든 어디든지 갈 수 있는 오프로드 타이어",
         image: "assets/choice-together.svg",
       },
     ],
   },
   {
-    question: "쉬는 시간에는 어떤 활동이 더 끌리나요?",
+    question: "어떤 도색을 하실건가요?",
     choices: [
-      { label: "조용히 휴식하기", image: "assets/choice-calm.svg" },
-      { label: "재미있는 활동 즐기기", image: "assets/choice-adventure.svg" },
-    ],
-  },
-  {
-    question: "새로운 선택을 할 때 가장 중요하게 보는 것은 무엇인가요?",
-    choices: [
-      { label: "안정성과 익숙함", image: "assets/choice-calm.svg" },
-      { label: "가능성과 설렘", image: "assets/choice-adventure.svg" },
+      { label: "환경오염이 되지만 역시 자동차는 강렬한 레드", image: "assets/choice-calm.svg" },
+      { label: "친환경적이지만 못생긴 블루", image: "assets/choice-adventure.svg" },
     ],
   },
 ];
 
 let currentQuestionIndex = 0;
 let selectedChoices = [];
+const ecoFriendlyChoices = new Set([
+  "일반 도로를 달리는 평범한 타이어",
+  "친환경적이지만 못생긴 블루",
+  "약76마력의 모닝급 전기 엔진",
+]);
 
 function renderQuestion() {
   const currentQuestion = questions[currentQuestionIndex];
@@ -80,8 +78,10 @@ function renderQuestion() {
   `;
 
   resultBox.classList.add("is-success");
-  appStatus.textContent = `${questionNumber}번째 질문`;
-  appStatus.classList.add("is-running");
+  if (appStatus) {
+    appStatus.textContent = `${questionNumber}번째 질문`;
+    appStatus.classList.add("is-running");
+  }
 
   resultBox.querySelectorAll(".choice-button").forEach((choiceButton) => {
     choiceButton.addEventListener("click", handleChoiceSelection);
@@ -90,7 +90,8 @@ function renderQuestion() {
 
 function handleChoiceSelection(event) {
   const choiceIndex = Number(event.currentTarget.dataset.choiceIndex);
-  selectedChoices.push(choiceIndex);
+  const selectedChoice = questions[currentQuestionIndex].choices[choiceIndex].label;
+  selectedChoices.push(selectedChoice);
   currentQuestionIndex += 1;
 
   if (currentQuestionIndex < questions.length) {
@@ -102,24 +103,21 @@ function handleChoiceSelection(event) {
 }
 
 function showResult() {
-  const firstChoiceCount = selectedChoices.filter(
-    (choiceIndex) => choiceIndex === 0,
+  const ecoFriendlyChoiceCount = selectedChoices.filter(
+    (choice) => ecoFriendlyChoices.has(choice),
   ).length;
   const resultMessage =
-    firstChoiceCount >= 3
-      ? "신중하고 차분하게 생각하는 편이에요."
-      : firstChoiceCount <= 1
-        ? "새로운 경험과 가능성을 즐기는 편이에요."
-        : "상황에 따라 균형 있게 선택하는 편이에요.";
+    ecoFriendlyChoiceCount >= 2 ? "친환경적인 미래" : "오염된 미래";
 
   resultBox.innerHTML = `
     <p class="question-text">선택이 모두 완료되었습니다.</p>
-    <strong>${resultMessage}</strong>
-    <p>정답은 없으며, 지금의 선택을 가볍게 돌아보는 결과입니다.</p>
+    <strong class="future-result">${resultMessage}</strong>
     <img class="result-image" src="assets/result.svg" alt="선택 결과를 보여주는 이미지" />
   `;
 
-  appStatus.textContent = "선택 완료";
+  if (appStatus) {
+    appStatus.textContent = "선택 완료";
+  }
 }
 
 function startQuiz() {
